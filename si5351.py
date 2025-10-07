@@ -879,15 +879,15 @@ class SI5351():
                 # Calculate the proper PLL frequency
                 (res, ms_reg) = self._multisynth_calc(freq, 0)
                 # Set PLL
-                #self._set_pll(pll_freq, self._pll_assignment[clk])
+                self._set_pll(res, self._pll_assignment[clk])
                 # Recalculate params for other synths on the same PLL
                 for i in range(0,6):
                     if self._clk_freq[i] != 0:
                         if self._pll_assignment[i] == self._pll_assignment[clk]:
                             # Select the proper R div value
-                            temp_freq = clk_freq[i]
+                            temp_freq = self._clk_freq[i]
                             (r_div, temp_freq) = self._select_r_div(temp_freq)
-                            (ms_value, temp_reg) = self._multisynth_calc(temp_freq, pll_freq)
+                            (ms_value, temp_reg) = self._multisynth_calc(temp_freq, res)
                             # If freq > 150 MHz, we need to use DIVBY4 and integer mode
                             if temp_freq >= _MULTISYNTH_DIVBY4_FREQ * _FREQ_MULT:
                                 div_by_4 = True
@@ -937,8 +937,8 @@ class SI5351():
                             return 1
                         else:
                             self._clk_freq[clk] = freq
-                            (r_div, freq) = select_r_div_ms67(freq)
-                            (res, ms_reg) = multisynth67_calc(freq, pllb_freq)
+                            (r_div, freq) = self.select_r_div_ms67(freq)
+                            (res, ms_reg) = self.multisynth67_calc(freq, self._pllb_freq)
                     else:
                         # Not an integer, divide ratio no good        
                         return 1
@@ -1012,62 +1012,3 @@ class SI5351():
         elif drive == DRIVE_8MA:
             reg_val |= 0x03
         self._write_reg(_CLK0_CTRL + clk, reg_val)
-        
- 
-    
-    
-    
-        
-            
-    
-    
-            
-            
-        
-  
-            
-    
-    
-    
-   
-
-                    
-                            
-                            
-                            
-                        
-                        
-                    
-                
-                
-                    
-                    
-                
-                
-                            
-                            
-                        
-                        
-                
-
-
-            
-                
-                
-                        
-            
-
-            
-            
-            
-            
-            
-
-            
-        
-        
-        
-                              
-      
-        
-    
